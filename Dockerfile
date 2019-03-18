@@ -9,9 +9,8 @@ RUN pip3 install asyncio &&\
         pip3 install aiofiles &&\
         pip3 install urllib3 &&\
 
-ADD . .
+COPY . /httpserver
 
 EXPOSE 80
 
-CMD python3 main.py
-
+CMD python3 /httpserver/main.py
