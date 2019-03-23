@@ -56,6 +56,7 @@ class Executor:
         file_path = urllib.parse.unquote(file_path, encoding='utf-8', errors='replace')
         if len(file_path.split('../')) > 1:
             raise ForbiddenError
+
         if file_path[-1:] == '/':
             file = self.files_root + file_path + "index.html"
         else:
@@ -65,6 +66,7 @@ class Executor:
             content = self.content_types[file.split('.')[-1]]
         else:
             content = ''
+
         if not os.path.isfile(file):
             if file_path[-1:] == '/' and file_path.count(".") < 1:
                 raise ForbiddenError

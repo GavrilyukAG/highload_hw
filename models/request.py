@@ -1,5 +1,5 @@
 class Request:
-    def __init__(self, method, protocol, url, connection):
+    def __init__(self, method='', protocol=b'HTTP/1.1\r', url='', connection='close'):
         self.method = method
         self.protocol = protocol
         self.url = url
@@ -18,10 +18,14 @@ class Request:
         return self.connection
 
 
-def get_values(data):
+def parse_request(data):
     arr = data.split(b'\n')
+    print("REQUEST: ", arr)
     values = arr[0].split()
-    method = values[0]
-    query = values[1].split(b'?')[0]
-    protocol = values[2]
-    return Request(method, protocol, query, '')
+    if len(values) > 1:
+        method = values[0]
+        query = values[1].split(b'?')[0]
+        protocol = values[2]
+        return Request(method, protocol, query, '')
+    else:
+        return Request()

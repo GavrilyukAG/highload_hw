@@ -1,6 +1,6 @@
 from handler.executor import Executor
 from handler.serializer import Serializer
-from models.request import get_values
+from models.request import parse_request
 
 
 class Handler:
@@ -9,7 +9,6 @@ class Handler:
         self.executor = Executor(self.root)
 
     async def handle(self, reader, writer):
-        # address = writer.get_extra_info('peername')
         block_size = 1024
         data = b""
         while True:
@@ -20,9 +19,10 @@ class Handler:
             if data[-4:] == b'\r\n\r\n':
                 break
         if len(data) > 0:
-            request = get_values(data)
+            request = parse_request(data)
             response = await self.executor.execute(request)
             response_data = await Serializer.dump(response)
+            # print("RESPONSE\n", response_data)
             writer.write(response_data)
             await writer.drain()
         writer.close()
